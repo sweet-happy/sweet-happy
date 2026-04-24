@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>甜点开心 · Sweet Happy</title>
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;scroll-behavior: smooth;}
+body {font-family: "PingFang SC", "Microsoft YaHei", sans-serif;background-color: #fffbf9;color: #444;line-height: 1.6;}
+header {background: #ffffffcc;backdrop-filter: blur(8px);padding: 16px 5%;position: sticky;top: 0;z-index: 99;box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+.nav {max-width: 1200px;margin: 0 auto;display: flex;justify-content: space-between;align-items: center;}
+.logo-wrap{display: flex;align-items: center;gap:10px;}
+.logo-img{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+.logo {font-size: 24px;font-weight: bold;color: #e97a91;}
+.menu {display: flex;align-items: center;}
+.menu a {margin-left: 28px;text-decoration: none;color: #666;font-size: 15px;transition: color 0.3s;position: relative;}
+.menu a:not(.login-btn):not(.user-drop-wrap > .user-drop-btn):hover{color: #e97a91;}
+.menu a:not(.login-btn):not(.user-drop-wrap > .user-drop-btn)::after {content: '';position: absolute;left: 0;bottom: -4px;width: 0;height: 2px;background-color: #e97a91;transition: 0.3s;}
+.menu a:not(.login-btn):not(.user-drop-wrap > .user-drop-btn):hover::after {width: 100%;}
+.menu a.active-nav {color: #e97a91;}
+.menu a.active-nav::after {width: 100%;}
+.login-btn,.user-drop-btn{background-color: #e97a91;color: #fff !important;padding: 8px 20px;border-radius: 50px;border:none;font-size:15px;cursor:pointer;margin-left:28px;}
+.user-drop-wrap {position:relative;}
+.user-drop-menu {position: absolute;top: 120%;right: 0;background: #fff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);border-radius: 8px;width: 120px;overflow: hidden;display: none;z-index: 999;}
+.user-drop-menu li {list-style: none;padding: 10px 15px;text-align: center;cursor: pointer;font-size: 14px;}
+.user-drop-menu li:hover {background: #ffeef2;color: #e97a91;}
+.cart-badge{position: absolute;top: -8px;right: -15px;background: #e97a91;color: #fff;font-size: 12px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 18px;}
+.page {display: none;}
+.page.active {display: block;}
+
+.banner {
+max-width: 1200px;
+margin: 20px auto 60px;
+height: 460px;
+border-radius: 20px;
+position: relative;
+overflow: hidden;
+}
+.swiper-img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: none;
+position: absolute;
+left:0;top:0;
+}
+.swiper-img.active {display: block;}
+
+.banner-left {
+position: absolute;
+left: 40px;
+top: 50%;
+transform: translateY(-50%);
+z-index: 2;
+width: 220px;
+color: #fff;
+text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.banner-text h1 {
+font-size: 30px;
+margin-bottom: 10px;
+line-height: 1.3;
+}
+.banner-text p {
+font-size: 14px;
+margin-bottom: 20px;
+opacity: 0.95;
+}
+.banner-nav {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+.banner-nav a {
+padding: 10px 20px;
+background: rgba(255,255,255,0.25);
+backdrop-filter: blur(6px);
+color: #fff;
+border-radius: 10px;
+text-decoration: none;
+font-weight: 500;
+text-align: center;
+transition: 0.3s;
+}
+.banner-nav a.active {
+background: #e97a91;
+color: #fff;
+}
+
+.btn {padding: 12px 28px;background: #e97a91;color: #fff;border-radius: 50px;text-decoration: none;font-weight: 500;transition: 0.3s;border:none;cursor:pointer;}
+.btn:hover {background: #d4667e;}
+.container {max-width: 1200px;margin: 0 auto 80px;padding: 0 5%;position: relative;}
+
+.free-qrcode-side{
+position: fixed;
+right: 30px;
+bottom: 30px;
+text-align: center;
+z-index: 99;
+display: none;
+}
+.close-float{
+position: absolute;top: -10px;right: -10px;
+width: 24px;height: 24px;background: #000;color: #fff;
+border-radius: 50%;line-height: 24px;text-align: center;
+font-size: 14px;cursor: pointer;
+}
+.tips-bubble{
+background: #ffeef2;color: #c84b6e;padding: 8px 12px;border-radius: 12px;
+margin-bottom: 15px;font-size: 13px;line-height: 1.6;
+}
+.free-qrcode-side img{
+width: 156px;height: auto;object-fit: contain;border-radius: 8px;cursor: zoom-in;
+}
+.zoom-tip {font-size: 12px;color: #666;margin-top: 6px;}
+
+.img-mask{
+position: fixed;inset: 0;background: rgba(0,0,0,0.8);display: none;
+z-index: 9999;text-align: center;padding-top: 50px;
+}
+.img-mask img{max-width: 80%;max-height: 80vh;}
+.img-mask .mask-close{
+position: absolute;top: 30px;right: 30px;color: #fff;font-size: 30px;cursor: pointer;
+}
+
+.section-title {
+text-align: center;font-size: clamp(22px,3vw,28px);margin-bottom: 40px;
+background: linear-gradient(45deg,#e97a91,#b467c9);
+-webkit-background-clip: text;color: transparent;
+font-weight: 600;letter-spacing: 2px;
+display: flex;align-items: center;justify-content: center;gap: 20px;
+}
+.title-gif{width: 60px;height: 60px;object-fit: cover;}
+.desc-text{text-align: center;color:#777;margin-bottom:40px;}
+
+.sub-nav {
+max-width: 900px;margin: 0 auto 50px;display: flex;justify-content: center;
+gap: 20px;flex-wrap: wrap;background: #fff;padding: 16px;border-radius: 50px;
+box-shadow: 0 2px 12px rgba(233,122,145,0.1);position: sticky;top: 90px;z-index: 90;
+}
+.sub-nav a {display: flex;align-items: center;gap: 6px;padding: 8px 20px;color: #666;text-decoration: none;border-radius: 30px;transition: 0.3s;}
+.sub-nav a i {color: #e97a91;font-size: 16px;}
+.sub-nav a:hover {background: #ffeef2;color: #e97a91;}
+.cate-block {margin-bottom: 60px;padding-top: 100px;}
+.cate-title {font-size: 20px;color: #e97a91;margin-bottom: 25px;border-left: 4px solid #e97a91;padding-left: 12px;}
+.product-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));gap: 30px;}
+.card {background: #fff;border-radius: 16px;overflow: hidden;box-shadow: 0 4px 18px rgba(0,0,0,0.04);transition: transform 0.3s;}
+.card:hover {transform: translateY(-6px);}
+.card-img {width: 100%;height: 220px;object-fit: cover;}
+.card-info {padding: 20px;}
+.card-title {font-size: 17px;margin-bottom: 8px;color: #333;}
+.card-desc {font-size: 13px;color: #999;margin-bottom:12px;min-height: 40px;}
+.price {font-size: 18px;color: #e97a91;font-weight: bold;}
+.num-box{display: flex;justify-content: center;align-items: center;margin-top:15px;gap:15px;}
+.num-btn{width:28px;height:28px;border-radius:50%;border:1px solid #e97a91;background:#fff;color:#e97a91;cursor:pointer;font-size:18px;}
+.num-btn:hover{background:#e97a91;color:#fff;}
+.num-count{font-size:16px;width:30px;text-align:center;}
+footer {background: #fff;padding: 40px 5%;text-align: center;color: #999;font-size:14px;border-top: 1px solid #f2f2f2;}
+.login-mask {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.25);display: none;justify-content: center;align-items: center;z-index: 999;}
+.login-box {width: 90%;max-width: 380px;border-radius: 20px;padding: clamp(30px,5vw,45px) clamp(25px,4vw,35px);box-shadow: 0 8px 30px rgba(233,122,145,0.15);background:#fff;}
+.login-box h2 {text-align: center;color: #e97a91;margin-bottom: 30px;font-size: 26px;}
+.input-item {margin-bottom: 22px;}
+.input-item input {width: 100%;padding:13px 16px;border:1px solid #f0dfe3;border-radius:12px;outline:none;font-size:15px;background:#fff9fb;}
+.cart-item{display:flex;align-items:center;justify-content:space-between;padding:20px;background:#fff;border-radius:12px;margin-bottom:15px;}
+.cart-item img{width:80px;height:80px;border-radius:8px;object-fit:cover;}
+.cart-del{color:#e97a91;cursor:pointer;font-size:18px;}
+.empty-txt{text-align:center;padding:60px 0;color:#999;font-size:16px;}
+.about-content{line-height: 2.3;color:#666;max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05);text-align:center;}
+.cart-total{background:#fff;padding:20px;border-radius:12px;margin:20px 0;text-align:right;font-size:18px;}
+.pay-box{background:#fff;padding:20px;border-radius:12px;margin:15px 0;}
+.pay-item{margin:10px 0;}
+.order-record-box{background:#fff;padding:15px;border-radius:12px;margin:10px 0;max-height:300px;overflow:auto;}
+.mail-link{
+color: #12B7F5;font-weight: bold;text-decoration: none;padding: 2px 6px;background: #f0f9ff;border-radius: 6px;margin-left: 6px;
+}
+.mail-link:hover{background: #12B7F5;color: #fff;}
+.about-tip{margin-top: 30px;text-align: center;font-size: 15px;}
+
+.wave-wrap {
+position: relative;width: 100%;height: 30px;margin: 20px auto 30px;overflow: hidden;
+}
+.wave {
+position: absolute;left: 0;right: 0;height: 10px;
+background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5 T150,5 T200,5' fill='none' stroke='%23e97a91' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x;
+background-size: 100px 10px;width: 200%;animation: waveMove 8s linear infinite;
+}
+@keyframes waveMove {
+0% { transform: translateX(0); }
+100% { transform: translateX(-100px); }
+}
+.light-wrap {
+display: flex;justify-content: center;gap: 14px;margin-top: -18px;margin-bottom: 60px;
+}
+.light {
+width: 10px;height: 10px;border-radius: 50%;animation: lightFlash 1.6s infinite alternate;
+}
+.light:nth-child(1) { background: #ff9a9a; animation-delay: 0s; }
+.light:nth-child(2) { background: #ffce54; animation-delay: 0.2s; }
+.light:nth-child(3) { background: #66bc66; animation-delay: 0.4s; }
+.light:nth-child(4) { background: #4fc1e9; animation-delay: 0.6s; }
+.light:nth-child(5) { background: #ac92ec; animation-delay: 0.8s; }
+@keyframes lightFlash {
+0% { opacity: 0.4; transform: scale(0.8); }
+100% { opacity: 1; transform: scale(1.1); }
+}
+
+.staff-wrap{
+display: flex;justify-content: center;flex-wrap:wrap;gap: 30px;margin-top: 20px;
+}
+.staff-item{
+text-align: center;
+}
+.staff-item img{
+width: 150px;height: 150px;border-radius: 50%;object-fit: cover;margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo-wrap">
+      <img src="me.png" class="logo-img" alt="logo">
+      <div class="logo">甜点开心</div>
+    </div>
+    <div class="menu">
+      <a href="javascript:switchPage('home')" data-nav="home" class="active-nav">首页</a>
+      <a href="javascript:switchPage('all')" data-nav="all">全部甜品</a>
+      <a href="javascript:switchPage('cart')" data-nav="cart">
+        购物车
+        <span class="cart-badge" id="cartTotalNum">0</span>
+      </a>
+      <a href="javascript:switchPage('about')" data-nav="about">关于我们</a>
+      <a class="login-btn" id="loginBtn" onclick="openLogin()">登录</a>
+      <div class="user-drop-wrap" id="userWrap" style="display:none;">
+        <button class="user-drop-btn" id="userBtn">我的 ▾</button>
+        <ul class="user-drop-menu" id="userMenu">
+          <li onclick="showOrder()">订单记录</li>
+          <li onclick="logout()">退出登录</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="free-qrcode-side">
+  <div class="close-float">×</div>
+  <div class="tips-bubble">扫描二维码<br>免费领取甜品</div>
+  <img src="rwewm.png" class="zoom-img" alt="免费甜品二维码">
+  <div class="zoom-tip">点击放大</div>
+</div>
+
+<div class="img-mask">
+  <span class="mask-close">×</span>
+  <img id="bigImg" src="">
+</div>
+
+<div class="page active" id="homePage">
+  <div class="banner">
+    <img src="xh1.jpg" class="swiper-img active">
+    <img src="xh2.jpg" class="swiper-img">
+    <img src="xh3.jpg" class="swiper-img">
+    <div class="banner-left">
+      <div class="banner-text">
+        <h1>一口甜点<br>一整天都开心</h1>
+        <p>用温柔的甜，治愈日常的小疲惫</p>
+      </div>
+      <div class="banner-nav">
+        <a class="active" onclick="goToSection(0)">人气甜品</a>
+        <a onclick="goToSection(1)">季节限定</a>
+        <a onclick="goToSection(2)">全部甜品</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">
+      <img src="dt1.gif" class="title-gif" alt="动图">
+      欢迎来到甜点开心
+      <img src="dt2.gif" class="title-gif" alt="动图">
+    </h2>
+    <p class="desc-text">精选优质甜品，甜蜜治愈每一天</p>
+
+    <div class="wave-wrap">
+      <div class="wave"></div>
+    </div>
+    <div class="light-wrap">
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+    </div>
+
+    <div class="cate-block" id="renqi">
+      <h3 class="cate-title">人气甜品</h3>
+      <div class="product-grid">
+
+<div class="card" data-id="r1" data-name="芋泥牛乳切块蛋糕" data-price="1" data-img="yn.jpg">
+<img src="yn.jpg" class="card-img" alt="芋泥牛乳切块蛋糕">
+<div class="card-info">
+<div class="card-title">芋泥牛乳切块蛋糕</div>
+<div class="card-desc">浅紫芋泥+奶白奶油层层相间，底部酥软蛋糕底，低脂温柔口感</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r2" data-name="青提抹茶巴斯克" data-price="1" data-img="lmqtmc.jpg">
+<img src="lmqtmc.jpg" class="card-img" alt="青提抹茶巴斯克">
+<div class="card-info">
+<div class="card-title">青提抹茶巴斯克</div>
+<div class="card-desc">浓郁抹茶芝士胚，顶部晴王青提+蓝莓，绵密微焦</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r3" data-name="香橙抹茶千层蛋糕" data-price="1" data-img="czmc.jpg">
+<img src="czmc.jpg" class="card-img" alt="香橙抹茶千层蛋糕">
+<div class="card-info">
+<div class="card-title">香橙抹茶千层蛋糕</div>
+<div class="card-desc">抹茶千层+动物奶油，鲜橙果肉+橙味果酱，酸甜清爽</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r4" data-name="薄荷巧克力脆层方块蛋糕" data-price="1" data-img="bqff.jpg">
+<img src="bqff.jpg" class="card-img" alt="薄荷巧克力脆层方块蛋糕">
+<div class="card-info">
+<div class="card-title">薄荷巧克力脆层方块蛋糕</div>
+<div class="card-desc">多层巧克力蛋糕+脆层，薄荷奶油+黑巧淋面，层次超丰富</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r5" data-name="焦糖布丁" data-price="1" data-img="bd.jpg">
+<img src="bd.jpg" class="card-img" alt="焦糖布丁">
+<div class="card-info">
+<div class="card-title">焦糖布丁</div>
+<div class="card-desc">焦香琥珀焦糖层，内里绵密滑嫩，复古经典奶香布丁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r6" data-name="纽约芝士切片" data-price="1" data-img="zs.jpg">
+<img src="zs.jpg" class="card-img" alt="纽约芝士切片">
+<div class="card-info">
+<div class="card-title">纽约芝士切片</div>
+<div class="card-desc">醇厚扎实芝士主体，消化饼干底，浓郁绵密</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r7" data-name="荔枝气泡奶冻饮" data-price="1" data-img="cmqt.jpg">
+<img src="cmqt.jpg" class="card-img" alt="荔枝气泡奶冻饮">
+<div class="card-info">
+<div class="card-title">荔枝气泡奶冻饮</div>
+<div class="card-desc">果冻脆底+粉白渐变冰沙，少女感清爽果饮</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r8" data-name="柠泡特调" data-price="1" data-img="nm.jpg">
+<img src="nm.jpg" class="card-img" alt="柠泡特调">
+<div class="card-info">
+<div class="card-title">柠泡特调</div>
+<div class="card-desc">鲜柠+苏打气泡水，清冽解腻，夏日低卡冰饮</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<div class="card" data-id="r9" data-name="广式双皮奶" data-price="1" data-img="spn.jpg">
+<img src="spn.jpg" class="card-img" alt="广式双皮奶">
+<div class="card-info">
+<div class="card-title">广式双皮奶</div>
+<div class="card-desc">经典粤式糖水，奶香醇厚、口感细滑温润</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+      </div>
+    </div>
+
+    <div class="cate-block" id="jijie">
+      <h3 class="cate-title">季节限定</h3>
+      <div class="product-grid">
+        <div class="card" data-id="j1" data-name="草莓鲜果蛋糕" data-price="1" data-img="cmxg.jpg">
+          <img src="cmxg.jpg" class="card-img" alt="草莓鲜果蛋糕">
+          <div class="card-info">
+            <div class="card-title">草莓鲜果蛋糕</div>
+            <div class="card-desc">季节限定 · 限时发售</div>
+            <div class="price">¥1</div>
+            <div class="num-box">
+              <button class="num-btn minus">-</button>
+              <div class="num-count">0</div>
+              <button class="num-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-id="j2" data-name="芒果芝士蛋糕" data-price="1" data-img="mgzs.jpg">
+          <img src="mgzs.jpg" class="card-img" alt="芒果芝士蛋糕">
+          <div class="card-info">
+            <div class="card-title">芒果芝士蛋糕</div>
+            <div class="card-desc">季节限定 · 奶香与果香温柔融合</div>
+            <div class="price">¥1</div>
+            <div class="num-box">
+              <button class="num-btn minus">-</button>
+              <div class="num-count">0</div>
+              <button class="num-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="card" data-id="j3" data-name="水蜜桃奶油蛋糕" data-price="1" data-img="mgzs.jpg">
+          <img src="smt.jpg" class="card-img" alt="水蜜桃奶油蛋糕">
+          <div class="card-info">
+            <div class="card-title">水蜜桃奶油蛋糕</div>
+            <div class="card-desc">季节限定 · 软嫩水蜜桃搭配轻盈奶油，清甜水润超温柔</div>
+            <div class="price">¥1</div>
+            <div class="num-box">
+              <button class="num-btn minus">-</button>
+              <div class="num-count">0</div>
+              <button class="num-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-id="j4" data-name="青提蜜桃气泡饮" data-price="1" data-img="mgzs.jpg">
+          <img src="qtmt.jpg" class="card-img" alt="青提蜜桃气泡饮">
+          <div class="card-info">
+            <div class="card-title">青提蜜桃气泡饮</div>
+            <div class="card-desc">季节限定 · 奶香与果香温柔融合</div>
+            <div class="price">¥1</div>
+            <div class="num-box">
+              <button class="num-btn minus">-</button>
+              <div class="num-count">0</div>
+              <button class="num-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="allPage">
+  <div class="container">
+    <h2 class="section-title">全部甜品</h2>
+    <p class="desc-text">精选全品类甜蜜点心</p>
+    <div class="sub-nav">
+      <a href="#sweet">甜品</a>
+      <a href="#bread">面包</a>
+      <a href="#cookie">饼干</a>
+      <a href="#drink">饮品</a>
+      <a href="#soup">糖水</a>
+    </div>
+
+    <div class="cate-block" id="sweet">
+      <h3 class="cate-title">甜品</h3>
+      <div class="product-grid">
+
+<!-- 1.芒果芝士蛋糕 -->
+<div class="card" data-id="r1" data-name="芒果芝士蛋糕" data-price="1" data-img="mgzs.jpg">
+<img src="mgzs.jpg" class="card-img" alt="芒果芝士蛋糕">
+<div class="card-info">
+<div class="card-title">芒果芝士蛋糕</div>
+<div class="card-desc">清甜芒果铺满绵密芝士，入口果香与奶香温柔融合，清爽不齁甜</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 2.巧克力布朗尼 -->
+<div class="card" data-id="r2" data-name="巧克力布朗尼" data-price="1" data-img="qklbln.jpg">
+<img src="qklbln.jpg" class="card-img" alt="巧克力布朗尼">
+<div class="card-info">
+<div class="card-title">巧克力布朗尼</div>
+<div class="card-desc">流心熔岩黑巧搭配冰淇淋，浓郁醇厚，巧克力脑袋直接狂喜</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 3.草莓鲜果蛋糕 -->
+<div class="card" data-id="r3" data-name="草莓鲜果蛋糕" data-price="1" data-img="cmxg.jpg">
+<img src="cmxg.jpg" class="card-img" alt="草莓鲜果蛋糕">
+<div class="card-info">
+<div class="card-title">草莓鲜果蛋糕</div>
+<div class="card-desc">新鲜草莓搭配轻盈动物奶油，松软胚体，满口清新果香</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 4.榛子巧克力蛋糕 -->
+<div class="card" data-id="r4" data-name="榛子巧克力蛋糕" data-price="1" data-img="zzqkl.jpg">
+<img src="zzqkl.jpg" class="card-img" alt="榛子巧克力蛋糕">
+<div class="card-info">
+<div class="card-title">榛子巧克力蛋糕</div>
+<div class="card-desc">坚果脆香裹丝滑巧克力淋酱，口感层次超丰富</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 5.经典提拉米苏 -->
+<div class="card" data-id="r5" data-name="经典提拉米苏" data-price="1" data-img="tlms.jpg">
+<img src="tlms.jpg" class="card-img" alt="经典提拉米苏">
+<div class="card-info">
+<div class="card-title">经典提拉米苏</div>
+<div class="card-desc">咖啡酒香漫开，绵密微苦，经典永不过时的意式风味</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 6.奥利奥巧克力芝士 -->
+<div class="card" data-id="r6" data-name="奥利奥巧克力芝士" data-price="1" data-img="alaqklzs.jpg">
+<img src="alaqklzs.jpg" class="card-img" alt="奥利奥巧克力芝士">
+<div class="card-info">
+<div class="card-title">奥利奥巧克力芝士</div>
+<div class="card-desc">奥利奥碎加持重巧芝士，醇厚绵密，甜感刚刚好</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 7.芋泥千层 -->
+<div class="card" data-id="r7" data-name="芋泥千层" data-price="1" data-img="ynqc.jpg">
+<img src="ynqc.jpg" class="card-img" alt="芋泥千层">
+<div class="card-info">
+<div class="card-title">芋泥千层</div>
+<div class="card-desc">手工绵密芋泥层层堆叠，入口细腻软绵，芋香十足</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 8.香蕉巧克力蛋糕 -->
+<div class="card" data-id="r8" data-name="香蕉巧克力蛋糕" data-price="1" data-img="xjqkl.jpg">
+<img src="xjqkl.jpg" class="card-img" alt="香蕉巧克力蛋糕">
+<div class="card-info">
+<div class="card-title">香蕉巧克力蛋糕</div>
+<div class="card-desc">香蕉的清甜中和黑巧苦感，松软湿润，风味绝佳</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 9.芒果烤芝士 -->
+<div class="card" data-id="r9" data-name="芒果烤芝士" data-price="1" data-img="mgzs.jpg">
+<img src="mgzs.jpg" class="card-img" alt="芒果烤芝士">
+<div class="card-info">
+<div class="card-title">芒果烤芝士</div>
+<div class="card-desc">炙烤后的焦香底味，搭配芒果果香，芝士香气超浓郁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 10.芋泥烤芝士 -->
+<div class="card" data-id="r10" data-name="芋泥烤芝士" data-price="1" data-img="ynkzs.jpg">
+<img src="ynkzs.jpg" class="card-img" alt="芋泥烤芝士">
+<div class="card-info">
+<div class="card-title">芋泥烤芝士</div>
+<div class="card-desc">焦香外皮包裹绵密芋泥芝士，暖香软糯，咸甜平衡</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 11.原味轻乳酪 -->
+<div class="card" data-id="r11" data-name="原味轻乳酪" data-price="1" data-img="ywqrl.jpg">
+<img src="ywqrl.jpg" class="card-img" alt="原味轻乳酪">
+<div class="card-info">
+<div class="card-title">原味轻乳酪</div>
+<div class="card-desc">轻盈绵软的轻芝士口感，入口顺滑，奶香清新不厚重</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 12.焦糖布丁 -->
+<div class="card" data-id="r12" data-name="焦糖布丁" data-price="1" data-img="jtbd.jpg">
+<img src="jtbd.jpg" class="card-img" alt="焦糖布丁">
+<div class="card-info">
+<div class="card-title">焦糖布丁</div>
+<div class="card-desc">炙烤焦糖脆顶，内里滑嫩如凝脂，一口嫩滑入心</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 13.抹茶糯米糍 -->
+<div class="card" data-id="r13" data-name="抹茶糯米糍" data-price="1" data-img="mcnmc.jpg">
+<img src="mcnmc.jpg" class="card-img" alt="抹茶糯米糍">
+<div class="card-info">
+<div class="card-title">抹茶糯米糍</div>
+<div class="card-desc">Q弹冰皮裹细腻抹茶内馅，软糯拉丝，茶味清新回甘</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 14.芒果重芝士 -->
+<div class="card" data-id="r14" data-name="芒果重芝士" data-price="1" data-img="zs.jpg">
+<img src="zs.jpg" class="card-img" alt="芒果重芝士">
+<div class="card-info">
+<div class="card-title">芒果重芝士</div>
+<div class="card-desc">大块芒果果肉加持，芝士厚重扎实，果香超浓郁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 15.葡式蛋挞 -->
+<div class="card" data-id="r15" data-name="葡式蛋挞" data-price="1" data-img="danta.jpg">
+<img src="danta.jpg" class="card-img" alt="葡式蛋挞">
+<div class="card-info">
+<div class="card-title">葡式蛋挞</div>
+<div class="card-desc">酥掉渣的外壳搭配嫩滑挞心，焦香边边，趁热吃超绝</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 16.草莓粉桃蛋糕 -->
+<div class="card" data-id="r16" data-name="草莓粉桃蛋糕" data-price="1" data-img="cmft.jpg">
+<img src="cmft.jpg" class="card-img" alt="草莓粉桃蛋糕">
+<div class="card-info">
+<div class="card-title">草莓粉桃蛋糕</div>
+<div class="card-desc">粉嫩颜值在线，草莓桃子双鲜果，少女感满满</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 17.西瓜草莓蛋糕 -->
+<div class="card" data-id="r17" data-name="西瓜草莓蛋糕" data-price="1" data-img="cmqt.jpg">
+<img src="cmqt.jpg" class="card-img" alt="西瓜草莓蛋糕">
+<div class="card-info">
+<div class="card-title">西瓜草莓蛋糕</div>
+<div class="card-desc">清爽果香蛋糕，酸甜多汁，夏日限定清新口感</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 18.曲奇焦糖芝士 -->
+<div class="card" data-id="r18" data-name="曲奇焦糖芝士" data-price="1" data-img="qqjtzs.jpg">
+<img src="qqjtzs.jpg" class="card-img" alt="曲奇焦糖芝士">
+<div class="card-info">
+<div class="card-title">曲奇焦糖芝士</div>
+<div class="card-desc">曲奇底 + 焦糖夹心，芝士绵密，甜香浓郁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 19.樱桃黑巧蛋糕 -->
+<div class="card" data-id="r19" data-name="樱桃黑巧蛋糕" data-price="1" data-img="ythq.jpg">
+<img src="ythq.jpg" class="card-img" alt="樱桃黑巧蛋糕">
+<div class="card-info">
+<div class="card-title">樱桃黑巧蛋糕</div>
+<div class="card-desc">酸甜车厘子搭配醇厚黑巧，华丽浓郁，口感惊艳</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 20.薄荷巧克力蛋糕 -->
+<div class="card" data-id="r20" data-name="薄荷巧克力蛋糕" data-price="1" data-img="bqff.jpg">
+<img src="bqff.jpg" class="card-img" alt="薄荷巧克力蛋糕">
+<div class="card-info">
+<div class="card-title">薄荷巧克力蛋糕</div>
+<div class="card-desc">清爽薄荷搭配微苦黑巧，冰凉解腻，口感清新</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 21.杨枝甘露蛋糕 -->
+<div class="card" data-id="r21" data-name="杨枝甘露蛋糕" data-price="1" data-img="yzgl.jpg">
+<img src="yzgl.jpg" class="card-img" alt="杨枝甘露蛋糕">
+<div class="card-info">
+<div class="card-title">杨枝甘露蛋糕</div>
+<div class="card-desc">复刻经典糖水风味，芒果西柚果香满满</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 22.水蜜桃奶油蛋糕 -->
+<div class="card" data-id="r22" data-name="水蜜桃奶油蛋糕" data-price="1" data-img="smt.jpg">
+<img src="smt.jpg" class="card-img" alt="水蜜桃奶油蛋糕">
+<div class="card-info">
+<div class="card-title">水蜜桃奶油蛋糕</div>
+<div class="card-desc">软嫩水蜜桃搭配轻盈奶油，清甜水润超温柔</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 23.芋泥麻薯蛋糕 -->
+<div class="card" data-id="r23" data-name="芋泥麻薯蛋糕" data-price="1" data-img="ynms.jpg">
+<img src="ynms.jpg" class="card-img" alt="芋泥麻薯蛋糕">
+<div class="card-info">
+<div class="card-title">芋泥麻薯蛋糕</div>
+<div class="card-desc">绵密芋泥搭配拉丝麻薯，糯叽叽星人必冲</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 24.芋泥奶冻切片 -->
+<div class="card" data-id="r24" data-name="芋泥奶冻切片" data-price="1" data-img="ynnd.jpg">
+<img src="ynnd.jpg" class="card-img" alt="芋泥奶冻切片">
+<div class="card-info">
+<div class="card-title">芋泥奶冻切片</div>
+<div class="card-desc">芋泥、奶冻、奶油三层结合，软嫩丝滑超满足</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 25.青提抹茶蛋糕 -->
+<div class="card" data-id="r25" data-name="青提抹茶蛋糕" data-price="1" data-img="qtmc.jpg">
+<img src="qtmc.jpg" class="card-img" alt="青提抹茶蛋糕">
+<div class="card-info">
+<div class="card-title">青提抹茶蛋糕</div>
+<div class="card-desc">晴王青提搭配清香抹茶，颜值口感双在线</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+      </div>
+    </div>
+
+    <div class="cate-block" id="bread">
+      <h3 class="cate-title">面包</h3>
+      <div class="product-grid">
+        <!-- 1.麻薯球 -->
+<div class="card" data-id="b1" data-name="麻薯球" data-price="1" data-img="msq.jpg">
+<img src="msq.jpg" class="card-img" alt="麻薯球">
+<div class="card-info">
+<div class="card-title">麻薯球</div>
+<div class="card-desc">外皮Q弹内里软糯，越嚼越香，越吃越上头</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 2.奶油夹心软欧包 -->
+<div class="card" data-id="b2" data-name="奶油夹心软欧包" data-price="1" data-img="nyjxrob.jpg">
+<img src="nyjxrob.jpg" class="card-img" alt="奶油夹心软欧包">
+<div class="card-info">
+<div class="card-title">奶油夹心软欧包</div>
+<div class="card-desc">松软欧包裹满绵密奶油，入口软fufu奶香浓郁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 3.海苔肉松小贝 -->
+<div class="card" data-id="b3" data-name="海苔肉松小贝" data-price="1" data-img="htrsxb.jpg">
+<img src="htrsxb.jpg" class="card-img" alt="海苔肉松小贝">
+<div class="card-info">
+<div class="card-title">海苔肉松小贝</div>
+<div class="card-desc">松软蛋糕体裹满海苔肉松，咸香湿润一口一个</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 4.火腿可颂三明治 -->
+<div class="card" data-id="b4" data-name="火腿可颂三明治" data-price="1" data-img="htkssmz.jpg">
+<img src="htkssmz.jpg" class="card-img" alt="火腿可颂三明治">
+<div class="card-info">
+<div class="card-title">火腿可颂三明治</div>
+<div class="card-desc">酥脆可颂搭配火腿芝士，咸香扎实早餐优选</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 5.爆浆奶油泡芙 -->
+<div class="card" data-id="b5" data-name="爆浆奶油泡芙" data-price="1" data-img="pf.jpg">
+<img src="pf.jpg" class="card-img" alt="爆浆奶油泡芙">
+<div class="card-info">
+<div class="card-title">爆浆奶油泡芙</div>
+<div class="card-desc">酥脆外皮，内馅奶油满满，一口直接爆浆</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 6.草莓贝果三明治 -->
+<div class="card" data-id="b6" data-name="草莓贝果三明治" data-price="1" data-img="cmbg.jpg">
+<img src="cmbg.jpg" class="card-img" alt="草莓贝果三明治">
+<div class="card-info">
+<div class="card-title">草莓贝果三明治</div>
+<div class="card-desc">韧劲贝果搭配草莓青酱夹心，清新健康不腻</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 7.肉桂苹果烤吐司 -->
+<div class="card" data-id="b7" data-name="肉桂苹果烤吐司" data-price="1" data-img="pgkts.jpg">
+<img src="pgkts.jpg" class="card-img" alt="肉桂苹果烤吐司">
+<div class="card-info">
+<div class="card-title">肉桂苹果烤吐司</div>
+<div class="card-desc">焦香吐司搭配烤苹果，肉桂香气温暖治愈</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 8.原味可颂牛角包 -->
+<div class="card" data-id="b8" data-name="原味可颂牛角包" data-price="1" data-img="njb.jpg">
+<img src="njb.jpg" class="card-img" alt="原味可颂牛角包">
+<div class="card-info">
+<div class="card-title">原味可颂牛角包</div>
+<div class="card-desc">层层起酥外皮酥脆，黄油香气极致浓郁</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 9.原味奶油贝果 -->
+<div class="card" data-id="b9" data-name="原味奶油贝果" data-price="1" data-img="ywnybg.jpg">
+<img src="ywnybg.jpg" class="card-img" alt="原味奶油贝果">
+<div class="card-info">
+<div class="card-title">原味奶油贝果</div>
+<div class="card-desc">柔韧贝果夹绵密奶油，低脂饱腹，口感扎实</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+  
+      </div>
+    </div>
+
+    <div class="cate-block" id="cookie">
+      <h3 class="cate-title">饼干</h3>
+      <div class="product-grid">
+        <!-- 1.黄油曲奇 -->
+<div class="card" data-id="c2" data-name="黄油曲奇" data-price="1" data-img="qq.jpg">
+<img src="qq.jpg" class="card-img" alt="黄油曲奇">
+<div class="card-info">
+<div class="card-title">黄油曲奇</div>
+<div class="card-desc">浓郁黄油奶香，酥到一碰就化，入口满是醇香</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 2.苏打咸饼干 -->
+<div class="card" data-id="c3" data-name="苏打咸饼干" data-price="1" data-img="sdxbg.jpg">
+<img src="sdxbg.jpg" class="card-img" alt="苏打咸饼干">
+<div class="card-info">
+<div class="card-title">苏打咸饼干</div>
+<div class="card-desc">淡淡咸香酥脆口感，低糖不腻，解馋饱腹超适配</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 3.巧克力夹心饼干 -->
+<div class="card" data-id="c4" data-name="巧克力夹心饼干" data-price="1" data-img="qkljxbg.jpg">
+<img src="qkljxbg.jpg" class="card-img" alt="巧克力夹心饼干">
+<div class="card-info">
+<div class="card-title">巧克力夹心饼干</div>
+<div class="card-desc">经典巧克力夹心，酥脆香甜，童年怀旧味道</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 4.蝴蝶酥 -->
+<div class="card" data-id="c5" data-name="蝴蝶酥" data-price="1" data-img="hds.jpg">
+<img src="hds.jpg" class="card-img" alt="蝴蝶酥">
+<div class="card-info">
+<div class="card-title">蝴蝶酥</div>
+<div class="card-desc">层层起酥奶香浓郁，一口酥脆掉渣，香甜回味悠长</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+        
+      </div>
+    </div>
+
+    <div class="cate-block" id="drink">
+      <h3 class="cate-title">饮品</h3>
+      <div class="product-grid">
+        <!-- 1.葡萄奶盖冰沙 -->
+<div class="card" data-id="d2" data-name="葡萄奶盖冰沙" data-price="1" data-img="ptngbs.jpg">
+<img src="ptngbs.jpg" class="card-img" alt="葡萄奶盖冰沙">
+<div class="card-info">
+<div class="card-title">葡萄奶盖冰沙</div>
+<div class="card-desc">浓郁葡萄果香搭配绵密奶盖，冰沙绵密酸甜冰爽</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 2.抹茶可可拿铁 -->
+<div class="card" data-id="d3" data-name="抹茶可可拿铁" data-price="1" data-img="mckknt.jpg">
+<img src="mckknt.jpg" class="card-img" alt="抹茶可可拿铁">
+<div class="card-info">
+<div class="card-title">抹茶可可拿铁</div>
+<div class="card-desc">抹茶与可可碰撞，丝滑醇厚，冷热都好喝</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 3.番薯奶油雪顶 -->
+<div class="card" data-id="d4" data-name="番薯奶油雪顶" data-price="1" data-img="fsnyxd.jpg">
+<img src="fsnyxd.jpg" class="card-img" alt="番薯奶油雪顶">
+<div class="card-info">
+<div class="card-title">番薯奶油雪顶</div>
+<div class="card-desc">清甜番薯搭配绵密奶油顶，夏日限定清爽特调</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 4.抹茶牛油果奶盖 -->
+<div class="card" data-id="d5" data-name="抹茶牛油果奶盖" data-price="1" data-img="mcnygng.jpg">
+<img src="mcnygng.jpg" class="card-img" alt="抹茶牛油果奶盖">
+<div class="card-info">
+<div class="card-title">抹茶牛油果奶盖</div>
+<div class="card-desc">绵密牛油果搭配抹茶，口感顺滑低负担</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 5.巧克力可可奶盖 -->
+<div class="card" data-id="d6" data-name="巧克力可可奶盖" data-price="1" data-img="qklkkng.jpg">
+<img src="qklkkng.jpg" class="card-img" alt="巧克力可可奶盖">
+<div class="card-info">
+<div class="card-title">巧克力可可奶盖</div>
+<div class="card-desc">浓醇可可奶盖，奶香丝滑，治愈力拉满</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 6.青提蜜桃气泡饮 -->
+<div class="card" data-id="d7" data-name="青提蜜桃气泡饮" data-price="1" data-img="qtmt.jpg">
+<img src="qtmt.jpg" class="card-img" alt="青提蜜桃气泡饮">
+<div class="card-info">
+<div class="card-title">青提蜜桃气泡饮</div>
+<div class="card-desc">果香 + 气泡感，清爽冒泡，解腻又解渴</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 7.抹茶草莓分层特调 -->
+<div class="card" data-id="d8" data-name="抹茶草莓分层特调" data-price="1" data-img="mccm.jpg">
+<img src="mccm.jpg" class="card-img" alt="抹茶草莓分层特调">
+<div class="card-info">
+<div class="card-title">抹茶草莓分层特调</div>
+<div class="card-desc">粉绿渐变超好看，草莓酸甜搭配抹茶清香</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 8.奇异果奶昔 -->
+<div class="card" data-id="d9" data-name="奇异果奶昔" data-price="1" data-img="qygnx.jpg">
+<img src="qygnx.jpg" class="card-img" alt="奇异果奶昔">
+<div class="card-info">
+<div class="card-title">奇异果奶昔</div>
+<div class="card-desc">新鲜奇异果打成绵密奶昔，酸甜顺滑满满维C</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 9.无花果气泡果茶 -->
+<div class="card" data-id="d10" data-name="无花果气泡果茶" data-price="1" data-img="whg.jpg">
+<img src="whg.jpg" class="card-img" alt="无花果气泡果茶">
+<div class="card-info">
+<div class="card-title">无花果气泡果茶</div>
+<div class="card-desc">清新果茶香搭配气泡，颜值高级口感清爽</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 10.鲜奶冰拿铁 -->
+<div class="card" data-id="d11" data-name="鲜奶冰拿铁" data-price="1" data-img="xn.jpg">
+<img src="xn.jpg" class="card-img" alt="鲜奶冰拿铁">
+<div class="card-info">
+<div class="card-title">鲜奶冰拿铁</div>
+<div class="card-desc">丝滑鲜奶搭配醇厚咖啡，简单纯粹越喝越香</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 11.渐变抹茶鲜奶茶 -->
+<div class="card" data-id="d12" data-name="渐变抹茶鲜奶茶" data-price="1" data-img="mcxn.jpg">
+<img src="mcxn.jpg" class="card-img" alt="渐变抹茶鲜奶茶">
+<div class="card-info">
+<div class="card-title">渐变抹茶鲜奶茶</div>
+<div class="card-desc">层次分明的抹茶鲜奶茶，茶香柔和奶香十足</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 12.柠檬气泡苏打 -->
+<div class="card" data-id="d13" data-name="柠檬气泡苏打" data-price="1" data-img="nm.jpg">
+<img src="nm.jpg" class="card-img" alt="柠檬气泡苏打">
+<div class="card-info">
+<div class="card-title">柠檬气泡苏打</div>
+<div class="card-desc">新鲜柠檬 + 清爽气泡，低卡解渴超解腻</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 13.海盐蓝椰气泡饮 -->
+<div class="card" data-id="d14" data-name="海盐蓝椰气泡饮" data-price="1" data-img="hy.jpg">
+<img src="hy.jpg" class="card-img" alt="海盐蓝椰气泡饮">
+<div class="card-info">
+<div class="card-title">海盐蓝椰气泡饮</div>
+<div class="card-desc">治愈渐变蓝色，海盐椰香，清冽冰凉</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 14.冰美式咖啡 -->
+<div class="card" data-id="d15" name="冰美式咖啡" data-price="1" data-img="bms.jpg">
+<img src="bms.jpg" class="card-img" alt="冰美式咖啡">
+<div class="card-info">
+<div class="card-title">冰美式咖啡</div>
+<div class="card-desc">纯粹咖啡本味，冰爽提神，减脂消肿好搭档</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+        
+      </div>
+    </div>
+
+<div class="cate-block" id="soup">
+  <h3 class="cate-title">糖水</h3>
+  <div class="product-grid" >
+
+      <!-- 1.芝麻糊 -->
+<div class="card" data-id="s1" data-name="芝麻糊" data-price="1" data-img="zmh.jpg">
+<img src="zmh.jpg" class="card-img" alt="芝麻糊">
+<div class="card-info">
+<div class="card-title">芝麻糊</div>
+<div class="card-desc">细腻绵密古法芝麻糊，入口顺滑醇香，暖身养胃</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 2.番薯糖水 -->
+<div class="card" data-id="s2" data-name="番薯糖水" data-price="1" data-img="fs.jpg">
+<img src="fs.jpg" class="card-img" alt="番薯糖水">
+<div class="card-info">
+<div class="card-title">番薯糖水</div>
+<div class="card-desc">粉糯红薯慢炖清甜，暖乎乎一碗，甜而不腻</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 3.木瓜银耳糖水 -->
+<div class="card" data-id="s3" data-name="木瓜银耳糖水" data-price="1" data-img="mgye.jpg">
+<img src="mgye.jpg" class="card-img" alt="木瓜银耳糖水">
+<div class="card-info">
+<div class="card-title">木瓜银耳糖水</div>
+<div class="card-desc">木瓜温润 + 银耳胶感满满，养颜清甜超滋润</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 4.竹蔗茅根水 -->
+<div class="card" data-id="s4" data-name="竹蔗茅根水" data-price="1" data-img="zzmgs.jpg">
+<img src="zzmgs.jpg" class="card-img" alt="竹蔗茅根水">
+<div class="card-info">
+<div class="card-title">竹蔗茅根水</div>
+<div class="card-desc">清热解燥的老广甜水，清润回甘，四季适宜</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 5.招牌双皮奶 -->
+<div class="card" data-id="s5" data-name="招牌双皮奶" data-price="1" data-img="spn.jpg">
+<img src="spn.jpg" class="card-img" alt="招牌双皮奶">
+<div class="card-info">
+<div class="card-title">招牌双皮奶</div>
+<div class="card-desc">奶香醇厚，嫩如凝脂，入口顺滑细腻</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 6.冰糖雪梨炖银耳 -->
+<div class="card" data-id="s6" data-name="冰糖雪梨炖银耳" data-price="1" data-img="btxldye.jpg">
+<img src="btxldye.jpg" class="card-img" alt="冰糖雪梨炖银耳">
+<div class="card-info">
+<div class="card-title">冰糖雪梨炖银耳</div>
+<div class="card-desc">雪梨清润银耳软糯，润喉去燥，温润养生</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 8.莲子百合糖水 -->
+<div class="card" data-id="s7" data-name="莲子百合糖水" data-price="1" data-img="lzbh.jpg">
+<img src="lzbh.jpg" class="card-img" alt="莲子百合糖水">
+<div class="card-info">
+<div class="card-title">莲子百合糖水</div>
+<div class="card-desc">绵密莲子百合搭配红枣，安神舒缓，清甜暖心</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+<!-- 9.仙草奶茶龟苓膏 -->
+<div class="card" data-id="s8" data-name="仙草奶茶龟苓膏" data-price="1" data-img="glg.jpg">
+<img src="glg.jpg" class="card-img" alt="仙草奶茶龟苓膏">
+<div class="card-info">
+<div class="card-title">仙草奶茶龟苓膏</div>
+<div class="card-desc">爽滑仙草搭配奶香奶茶，冰凉爽口解腻消暑</div>
+<div class="price">¥1</div>
+<div class="num-box">
+<button class="num-btn minus">-</button>
+<div class="num-count">0</div>
+<button class="num-btn plus">+</button>
+</div>
+</div>
+</div>
+
+ </div>
+  </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="page" id="cartPage">
+  <div class="container">
+    <h2 class="section-title">我的购物车</h2>
+    <div id="cartList"></div>
+    <div class="cart-total">合计总价：¥<span id="totalPrice">0</span></div>
+    <div class="pay-box">
+      <p>选择支付方式</p>
+      <div class="pay-item"><label><input type="radio" name="pay" value="微信支付" checked>微信支付</label></div>
+      <div class="pay-item"><label><input type="radio" name="pay" value="QQ支付">QQ支付</label></div>
+      <div class="pay-item"><label><input type="radio" name="pay" value="支付宝">支付宝</label></div>
+      <div class="pay-item"><label><input type="radio" name="pay" value="银行卡">银行卡</label></div>
+    </div>
+    <button class="btn" onclick="buyNow()" style="width:100%">立即结算</button>
+  </div>
+</div>
+
+<div class="page" id="aboutPage">
+  <div class="container">
+    <h2 class="section-title">关于我们</h2>
+
+    <div class="about-content">
+      <p><strong>品牌形象</strong></p>
+      <p>🍰 甜点开心，是一家专注于精致甜品研发、制作与售卖的治愈系甜品品牌。</p>
+      <p>我们坚持选用新鲜优质食材，拒绝添加剂与半成品，全部甜品手工制作。</p>
+      <p>涵盖人气甜品、季节限定、日常点心、清爽饮品，定期上新。</p>
+      <p>甜食治愈坏心情，一口甜蜜，抚平生活疲惫。</p>
+      <p>服务理念：用心做甜品，温柔待生活</p>
+      <p>经营宗旨：新鲜、健康、美味、实惠</p>
+      <p>如需咨询请发送QQ邮箱 <a href="javascript:;" class="mail-link">点击联系</a></p>
+
+      <p class="about-tip">✨ 本店支持定制 ✨</p>
+
+      <div class="wave-wrap" style="margin:30px 0 10px;">
+        <div class="wave"></div>
+      </div>
+      <br>
+      <div class="light-wrap" style="margin-bottom:30px;">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+      </div>
+      <br>
+      <div class="staff-wrap" style="margin-top:0;">
+        <div class="staff-item">
+          <img src="dz.png" alt="店长">
+          <p>店长</p>
+        </div>
+        <div class="staff-item">
+          <img src="dy.jpg" alt="店员">
+          <p>店员</p>
+        </div>
+        <div class="staff-item">
+          <img src="dy1.jpg" alt="店员">
+          <p>店员</p>
+        </div>
+        <div class="staff-item">
+          <img src="dy2.jpg" alt="店员">
+          <p>店员</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="login-mask" id="loginMask">
+  <div class="login-box">
+    <h2>账号登录</h2>
+    <div class="input-item">
+      <input id="username" placeholder="请输入账号">
+    </div>
+    <div class="input-item">
+      <input id="pwd" type="password" placeholder="请输入密码">
+    </div>
+    <button class="btn" style="width:100%" onclick="loginSuccess()">登录</button>
+    <button style="margin-top:15px;background:none;border:none;color:#999;cursor:pointer;width:100%" onclick="closeLogin()">关闭窗口</button>
+  </div>
+</div>
+
+<div class="login-mask" id="payMask" style="background:rgba(0,0,0,0.7);">
+  <div style="background:#fff;padding:30px;border-radius:16px;text-align:center;">
+    <p style="margin-bottom:20px;font-size:16px;">请扫码完成支付</p>
+    <img src="ewm.jpg" style="width:220px;height:auto;margin:0 auto 30px;display:block;" alt="支付二维码">
+    <p style="display:flex;gap:15px;justify-content:center;">
+      <button class="btn" onclick="paySuccess()" style="flex:1;border-radius:8px;">支付成功</button>
+      <button onclick="closePayMask()" style="flex:1;padding: 12px 20px;background:#eee;color:#666;border:0;border-radius:8px;cursor:pointer;">关闭订单</button>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <p>甜点开心 © 2026 版权所有</p>
+</footer>
+
+<script>
+let cart = [];
+let nowUser = localStorage.getItem("loginUser") || "";
+const cartTotalNum = document.getElementById('cartTotalNum');
+const userMenu = document.getElementById('userMenu');
+const freeSide = document.querySelector('.free-qrcode-side');
+const imgMask = document.querySelector('.img-mask');
+const bigImg = document.getElementById('bigImg');
+const zoomImg = document.querySelector('.zoom-img');
+const swiperImgs = document.querySelectorAll('.swiper-img');
+let swiperIndex = 0;
+const sectionList = ['renqi','jijie','homePage'];
+
+if(!localStorage.getItem("userOrder")) localStorage.setItem("userOrder",JSON.stringify({}));
+let userOrder = JSON.parse(localStorage.getItem("userOrder"));
+
+document.querySelector('.close-float').addEventListener('click',function(){
+  freeSide.style.display = 'none';
+});
+
+zoomImg.addEventListener('click',function(){
+  bigImg.src = this.src;
+  imgMask.style.display = 'block';
+});
+
+document.querySelector('.mask-close').addEventListener('click',function(){
+  imgMask.style.display = 'none';
+});
+
+imgMask.addEventListener('click',function(e){
+  if(e.target === imgMask) imgMask.style.display = 'none';
+});
+
+function syncSwiper(i){
+  swiperIndex = i;
+  swiperImgs.forEach((el,idx)=>{
+    el.classList.toggle('active', idx===i);
+  });
+  document.querySelectorAll('.banner-nav a').forEach((el,idx)=>{
+    el.classList.toggle('active', idx===i);
+  });
+}
+
+function goToSection(i){
+  syncSwiper(i);
+  if(i === 2){
+    switchPage('all');
+    setTimeout(()=>{
+      document.getElementById('sweet').scrollIntoView({behavior:'smooth'});
+    },100)
+  }else{
+    document.getElementById(sectionList[i]).scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+setInterval(()=>{
+  swiperIndex = (swiperIndex + 1) % swiperImgs.length;
+  syncSwiper(swiperIndex);
+}, 3000);
+
+document.getElementById('userBtn').addEventListener('click',e=>{
+  e.stopPropagation();
+  userMenu.style.display = userMenu.style.display==="block"?"none":"block";
+});
+
+document.addEventListener('click',()=>userMenu.style.display="none");
+
+function switchPage(type){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const map={home:'homePage',all:'allPage',cart:'cartPage',about:'aboutPage'};
+  document.getElementById(map[type]).classList.add('active');
+  freeSide.style.display = type === 'home' ? 'block' : 'none';
+  document.querySelectorAll('.menu a[data-nav]').forEach(a=>a.classList.remove('active-nav'));
+  let curNav = document.querySelector(`a[data-nav="${type}"]`);
+  if(curNav) curNav.classList.add('active-nav');
+  renderCart();
+}
+
+function openLogin(){document.getElementById('loginMask').style.display='flex';}
+function closeLogin(){document.getElementById('loginMask').style.display='none';}
+
+function loginSuccess(){
+  let u = document.getElementById("username").value.trim();
+  let p = document.getElementById("pwd").value.trim();
+  if(!u||!p) return alert("请输入完整账号密码");
+  nowUser = u;
+  localStorage.setItem("loginUser", u);
+  closeLogin();
+  document.getElementById('loginBtn').style.display = 'none';
+  document.getElementById('userWrap').style.display = 'block';
+  if(!userOrder[nowUser]) userOrder[nowUser] = [];
+  localStorage.setItem("userOrder",JSON.stringify(userOrder));
+}
+
+function logout(){
+  nowUser = "";
+  localStorage.removeItem("loginUser");
+  document.getElementById('loginBtn').style.display = 'block';
+  document.getElementById('userWrap').style.display = 'none';
+  userMenu.style.display="none";
+  document.getElementById("username").value = "";
+  document.getElementById("pwd").value = "";
+  switchPage('home');
+}
+
+function showOrder(){
+  userMenu.style.display="none";
+  if(!nowUser) return alert("请先登录");
+  let list = userOrder[nowUser]||[];
+  if(list.length===0) return alert("暂无订单");
+  let str = "你的订单：\n";
+  list.forEach((item,idx)=>{
+    str += `\n${idx+1}.${item.time}\n商品：${item.goods}\n支付方式：${item.pay}\n金额：¥${item.price}`;
+  })
+  alert(str);
+}
+
+function renderCart(){
+  const wrap = document.getElementById('cartList');
+  let total = 0;
+  cart.forEach(item=>total += Number(item.price)*item.num);
+  document.getElementById("totalPrice").innerText = total;
+  updateCartBadge();
+  if(cart.length===0){
+    wrap.innerHTML = '<p class="empty-txt">购物车空空如也~</p>';
+    return;
+  }
+  let html = "";
+  cart.forEach((item,idx)=>{
+    html += `
+    <div class="cart-item">
+      <img src="${item.img}" alt="${item.name}">
+      <div>
+        <p>${item.name}</p>
+        <p>¥${item.price} × ${item.num}</p>
+      </div>
+      <span class="cart-del" onclick="delCart(${idx})">×</span>
+    </div>
+    `;
+  })
+  wrap.innerHTML = html;
+}
+
+function delCart(idx){
+  cart.splice(idx,1);
+  renderCart();
+  syncCardNum();
+}
+
+function updateCartBadge(){
+  let n = cart.reduce((s,i)=>s+i.num,0);
+  cartTotalNum.innerText = n;
+}
+
+function syncCardNum(){
+  document.querySelectorAll('.card').forEach(card=>{
+    let id = card.dataset.id;
+    let count = card.querySelector('.num-count');
+    let find = cart.find(i=>i.id===id);
+    count.innerText = find?find.num:0;
+  })
+}
+
+document.querySelectorAll('.card').forEach(card=>{
+  let id = card.dataset.id,name=card.dataset.name,price=card.dataset.price,img=card.dataset.img;
+  let minus = card.querySelector('.minus'),plus=card.querySelector('.plus'),count=card.querySelector('.num-count');
+  minus.onclick = ()=>{
+    let num = parseInt(count.innerText);
+    if(num<=0)return;
+    num--;
+    count.innerText = num;
+    let idx = cart.findIndex(i=>i.id===id);
+    if(idx>-1){
+      cart[idx].num = num;
+      if(num<=0) cart.splice(idx,1);
+    }
+    renderCart();
+  }
+  plus.onclick = ()=>{
+    let num = parseInt(count.innerText)+1;
+    count.innerText = num;
+    let idx = cart.findIndex(i=>i.id===id);
+    idx>-1?cart[idx].num=num:cart.push({id,name,price,img,num});
+    renderCart();
+  }
+})
+
+function buyNow(){
+  if(!nowUser) return alert("请先登录账号，才可下单");
+  if(cart.length===0) return alert("购物车暂无商品");
+  let pay = document.querySelector('input[name="pay"]:checked');
+  if(!pay) return alert("请选择支付方式");
+  document.getElementById('payMask').style.display = 'flex';
+}
+
+function paySuccess(){
+  let total = 0;
+  let goodsArr = [];
+  cart.forEach(item=>{
+    total += Number(item.price)*item.num;
+    goodsArr.push(`${item.name}×${item.num}`);
+  })
+  let payType = document.querySelector('input[name="pay"]:checked').value;
+  let nowTime = new Date().toLocaleString();
+  userOrder[nowUser].push({
+    time:nowTime,
+    goods:goodsArr.join("、"),
+    pay:payType,
+    price:total
+  })
+  localStorage.setItem("userOrder",JSON.stringify(userOrder));
+  cart = [];
+  renderCart();
+  document.getElementById('payMask').style.display = 'none';
+  alert("支付成功！订单已保存");
+}
+
+function closePayMask(){
+  document.getElementById('payMask').style.display = 'none';
+}
+
+window.onload = function(){
+  if(nowUser){
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('userWrap').style.display = 'block';
+  }
+  freeSide.style.display = 'block';
+  renderCart();
+  switchPage('home');
+}
+</script>
+</body>
+</html>
